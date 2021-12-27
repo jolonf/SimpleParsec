@@ -98,7 +98,14 @@ if case let .ok(_, ast) = result {
 Outputs:
 
 ```
-tag("function", SimpleParsec.AST.list([SimpleParsec.AST.tag("functionName", SimpleParsec.AST.value("myFunction")), SimpleParsec.AST.tag("params", SimpleParsec.AST.list([SimpleParsec.AST.tag("param", SimpleParsec.AST.value("paramOne")), SimpleParsec.AST.tag("param", SimpleParsec.AST.value("paramTwo")), SimpleParsec.AST.tag("param", SimpleParsec.AST.value("paramThree"))]))]))
+tag("function", SimpleParsec.AST.list([
+    SimpleParsec.AST.tag("functionName", SimpleParsec.AST.value("myFunction")), 
+    SimpleParsec.AST.tag("params", SimpleParsec.AST.list([
+        SimpleParsec.AST.tag("param", SimpleParsec.AST.value("paramOne")), 
+        SimpleParsec.AST.tag("param", SimpleParsec.AST.value("paramTwo")), 
+        SimpleParsec.AST.tag("param", SimpleParsec.AST.value("paramThree"))
+    ]))
+]))
 ```
 
 - `tag()` adds a label to a nested parser result which can be used for processing the AST later.
