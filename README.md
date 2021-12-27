@@ -73,7 +73,8 @@ func params() -> Parser {
      times(min: 1, concat([
         param(), 
         ignore(string(",")), 
-        ignore(iws()))),
+        ignore(iws())
+     ]))
      param()
    ])
 }
