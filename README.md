@@ -78,15 +78,15 @@ let parser = functionHeader()
 
 let result = parser("def myFunction(param1, param2, param3)")
 ```
-## `tag()`
+### `tag()`
 `tag()` adds a label to a nested parser result which can be used for processing the AST later.
-## `ignore()`
+### `ignore()`
 `ignore()` will match its parser but not add the results to the AST.
-## `concat()`
+### `concat()`
 `concat()` concat takes an array of parsers and ensures they all occur one after the other.
-## `times()`
+### `times()`
 `times()` expects the parser to occur a multiple number of times, with a specified minimum.
-## `iws()`
+### `iws()`
 `iws()` is short for in-line whitespace, i.e. whitespace that doesn't include new lines, or
 simply spaces and tabs. It matches one or more. To match a single character use `iwsChar()`.
 See also `ws()` which also matches new lines, and the single character version `wsChar()`.
