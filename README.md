@@ -2,39 +2,49 @@
 
 Simple parser combinator library inspired by NimbleParsec for Elixir.
 
-Each function in the library returns a Parser which is just a type alias for a function
-which takes a substring and returns a ParserReslt.
-For example to parse for the exact string `def` use the `string()` function:
+Each function in the library returns a `Parser` which is just a type alias for a 
+function which takes a substring and returns a `ParserResult`:
+```swift
+public typealias Parser = (Substring) -> ParserResult
+```
+For example to parse for the exact string `def`, use the `string(_: String) -> Parser` function:
 ```swift
 import SimpleParsec
 
 let parser = string("def")
 ```
-The parser is used by simply treating it as a function and passing a string to parse:
+The returned value is a function (of type `Parser`) which can be passed a string to parse:
 ```swift
 let result = parser("def name")
 ```
-Note that the parameter type is actually `Substring` and not `String`. This allow for
-efficienty processing throughout the parsers as substrings don't copy the string instead
-represent index locations within the string. Swift automatically converted the string literal
-into a `String` however if we have an already defined string we will need to convert
+Note that the parameter type is actually `Substring` and not `String`. This allows for
+efficient processing throughout the parsers as substrings don't copy the string instead
+represent index locations within the string. Swift automatically converts the string literal
+into a `Subtring` however if we have an already defined string we will need to convert
 it to a substring first:
 ```swift
-let text = "def name:
+let text = "def name"
 let result = parser(Substring(text))
 ```
-A parser returns a `ParserResult` which is an enum with two cases, either
-`.ok` or `.error`. Both include the remaining text that still needs to be parsed
+A parser returns a `ParserResult` which is an `enum` with two cases, either
+`.ok` or `.error`. 
+```swift
+public enum ParserResult {
+    case ok(Substring, AST?)
+    case error(Substring, String)
+}
+```
+Both include the remaining text that still needs to be parsed (the `Substring`)
 and `.ok` also includes the AST constructed up to this point whereas `.error`
-includes an error message. We can desconstruct the enum using an if:
+includes an error message. We can desconstruct the enum using an `if case let`:
 ```swift
 if case let .ok(remain, astOpt) = result,
     let ast = astOpt {
     print(ast)
 }
 ```
-Note that `ast` is an optional, i.e. it can be nil even if the result is `.ok`. This
-is permitted for parsers like `ignore` and `optional` where no match is okay
+Note that `astOpt` is an optional, i.e. it can be `nil` even if the result is `.ok`. 
+The AST can be `nil` for parsers such as `ignore` and `optional` where no match is okay
 or the result is not intended to be added to the AST.
 Here is a more complex example:
 ```swift
