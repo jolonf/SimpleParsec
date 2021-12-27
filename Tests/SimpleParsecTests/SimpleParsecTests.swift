@@ -361,4 +361,49 @@ final class SimpleParsecTests: XCTestCase {
             return
         }
     }
+    
+    /// This example is from the readme and should be tested.
+    func testComplexExample() throws {
+        func functionHeader() -> Parser {
+            tag(label: "function", concat([
+               ignore(string("def")),
+               ignore(iws()),
+               tag(label: "functionName", alphaString()),
+               ignore(string("(")),
+               tag(label: "params", optional(params())),
+               ignore(string(")"))
+            ]))
+        }
+
+        func params() -> Parser {
+            choose([
+               concat([
+                 times(min: 1, concat([
+                    param(),
+                    ignore(string(",")),
+                    ignore(optional(iws()))
+                 ])),
+                 param()
+               ]),
+               param()
+           ])
+        }
+
+        func param() -> Parser {
+            tag(label: "param", alphaString())
+        }
+
+        let parser = functionHeader()
+
+        let result = parser("def myFunction(paramOne, paramTwo, paramThree)")
+        
+        guard case .ok("", _) = result
+        else {
+            print(result)
+            XCTAssert(false)
+            return
+        }
+        
+        print(result)
+    }
 }

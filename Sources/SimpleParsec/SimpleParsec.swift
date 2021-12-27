@@ -206,10 +206,7 @@ public func times(min: Int, _ parser: @escaping Parser) -> Parser {
         for _ in 1...min {
             if case let .ok(result, astOpt) = parser(newText) {
                 newText = result
-                // Only add the ast if it isn't empty (nil)
-                if let ast = astOpt {
-                    list.append(ast)
-                }
+                list.append(astOpt: astOpt)
             } else {
                 return .error(text, "times")
             }
@@ -217,16 +214,15 @@ public func times(min: Int, _ parser: @escaping Parser) -> Parser {
         // Repeat until fail
         while case let .ok(result, astOpt) = parser(newText) {
             newText = result
-            if let ast = astOpt {
-                list.append(ast)
-            }
+            list.append(astOpt: astOpt)
         }
         return .ok(newText, .list(list))
     }
 }
 
 /// All parsers must succeed one after each other or all fail. Result is returned
-/// as a `.list`.
+/// as a `.list`. If a parser returns a list then its contents are appended
+/// to concat's list results directly, rather than being a nested list.
 public func concat(_ parsers: [Parser]) -> Parser {
     { (text: Substring) -> ParserResult in
         var newText = text
@@ -234,14 +230,28 @@ public func concat(_ parsers: [Parser]) -> Parser {
         for parser in parsers {
             if case let .ok(result, astOpt) = parser(newText) {
                 newText = result
-                if let ast = astOpt {
-                    list.append(ast)
-                }
+                list.append(astOpt: astOpt)
             } else {
                 return .error(text, "concat")
             }
         }
         return .ok(newText, .list(list))
+    }
+}
+
+/// Add an append function to an Array of AST which copies the contents of
+/// an AST if it is an `.list` and simply doesn't copy it if it is `nil`.
+extension Array where Element == AST {
+    mutating func append(astOpt: AST?) {
+        // Only append if it isn't nil
+        if let ast = astOpt {
+            // If the result is a list, then add each element directly
+            if case let .list(childList) = ast {
+                self.append(contentsOf: childList)
+            } else {
+                self.append(ast)
+            }
+        }
     }
 }
 

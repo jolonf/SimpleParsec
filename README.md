@@ -63,19 +63,22 @@ func functionHeader() -> Parser {
        ignore(iws()),
        tag(label: "functionName", alphaString()),
        ignore(string("(")),
-       tag(label: "params", params()),
+       tag(label: "params", optional(params())),
        ignore(string(")"))
     ]))
 }
 
 func params() -> Parser {
-   concat([
-     times(min: 1, concat([
-        param(), 
-        ignore(string(",")), 
-        ignore(iws())
-     ])),
-     param()
+    choose([
+       concat([
+         times(min: 1, concat([
+            param(),
+            ignore(string(",")),
+            ignore(optional(iws()))
+         ])),
+         param()
+       ]),
+       param()
    ])
 }
 
@@ -85,8 +88,19 @@ func param() -> Parser {
 
 let parser = functionHeader()
 
-let result = parser("def myFunction(param1, param2, param3)")
+let result = parser("def myFunction(paramOne, paramTwo, paramThree)")
+
+if case let .ok(_, ast) = result {
+    print(ast!)
+}
 ```
+
+Outputs:
+
+```
+tag("function", SimpleParsec.AST.list([SimpleParsec.AST.tag("functionName", SimpleParsec.AST.value("myFunction")), SimpleParsec.AST.tag("params", SimpleParsec.AST.list([SimpleParsec.AST.tag("param", SimpleParsec.AST.value("paramOne")), SimpleParsec.AST.tag("param", SimpleParsec.AST.value("paramTwo")), SimpleParsec.AST.tag("param", SimpleParsec.AST.value("paramThree"))]))]))
+```
+
 - `tag()` adds a label to a nested parser result which can be used for processing the AST later.
 - `ignore()` will match its parser but not add the results to the AST.
 - `concat()` takes an array of parsers and ensures they all occur one after the other.
