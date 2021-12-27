@@ -74,7 +74,7 @@ func params() -> Parser {
         param(), 
         ignore(string(",")), 
         ignore(iws())
-     ]))
+     ])),
      param()
    ])
 }
