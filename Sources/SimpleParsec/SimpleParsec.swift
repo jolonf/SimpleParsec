@@ -4,6 +4,8 @@
 /// which takes a substring and returns a ParserReslt.
 /// For example to parse for the exact string `def` use the `string()` function:
 /// ```swift
+/// import SimpleParsec
+/// 
 /// let parser = string("def")
 /// ```
 /// The parser is used by simply treating it as a function and passing a string to parse:
