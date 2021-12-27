@@ -62,16 +62,24 @@ func functionHeader() -> Parser {
        ignore(string("def")),
        ignore(iws()),
        tag(label: "functionName", alphaString()),
-       string("("),
-       params(),
-       string(")")
+       ignore(string("(")),
+       tag(label: "params", params()),
+       ignore(string(")"))
     ]))
 }
+
 func params() -> Parser {
    concat([
-     times(min: 1, concat([alphaString(), string(","), iws())),
-     alphaString()
+     times(min: 1, concat([
+        param(), 
+        ignore(string(",")), 
+        ignore(iws()))),
+     param()
    ])
+}
+
+func param() -> Parser {
+    tag(label: "param", alphaString())
 }
 
 let parser = functionHeader()
