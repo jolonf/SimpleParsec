@@ -1,6 +1,6 @@
 # SimpleParsec
 
-Simple parser combinator library inspired by NimbleParsec for Elixir.
+Simple parser combinator library for Swift inspired by NimbleParsec for Elixir.
 
 Each function in the library creates a `Parser` which can be used to
 create an AST from text. 
@@ -80,7 +80,7 @@ let result = parser("def myFunction(param1, param2, param3)")
 ```
 - `tag()` adds a label to a nested parser result which can be used for processing the AST later.
 - `ignore()` will match its parser but not add the results to the AST.
-- `concat()` concat takes an array of parsers and ensures they all occur one after the other.
+- `concat()` takes an array of parsers and ensures they all occur one after the other.
 - `times()` expects the parser to occur a multiple number of times, with a specified minimum.
 - `iws()` is short for in-line whitespace, i.e. whitespace that doesn't include new lines, or
 simply spaces and tabs. It matches one or more. To match a single character use `iwsChar()`.
