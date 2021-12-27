@@ -403,7 +403,5 @@ final class SimpleParsecTests: XCTestCase {
             XCTAssert(false)
             return
         }
-        
-        print(result)
     }
 }
