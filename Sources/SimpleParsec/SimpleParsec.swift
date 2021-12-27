@@ -87,7 +87,7 @@ public enum ParserResult {
 }
 
 /// Functions in this library construct and return parsers which are simply
-/// functions that take text to be parsed and return a `ParserReslt`.
+/// functions that take text to be parsed and return a `ParserResult`.
 /// Note that the parameter is a `Substring` instead of a `String`
 /// which is more efficient as it won't copy the string.
 public typealias Parser = (Substring) -> ParserResult
