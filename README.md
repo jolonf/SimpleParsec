@@ -2,22 +2,31 @@
 
 Simple parser combinator library inspired by NimbleParsec for Elixir.
 
-Each function in the library returns a `Parser` which is just a type alias for a 
-function which takes a substring and returns a `ParserResult`:
-```swift
-public typealias Parser = (Substring) -> ParserResult
-```
-For example to parse for the exact string `def`, use the `string(_: String) -> Parser` function:
+Each function in the library creates a `Parser` which can be used to
+create an AST from text. 
+
+For example the `string(_: String) -> Parser` function returns a `Parser`
+which matches the exact string passed to the `string()` function:
 ```swift
 import SimpleParsec
 
-let parser = string("def")
+let parser: Parser = string("def")
 ```
-The returned value is a function (of type `Parser`) which can be passed a string to parse:
+The above example constructs a parser which matches the exact string `"def"`.
+
+`Parser` is just a typealias for a function which we can call to perform the parsing. The `Parser` typealias is defined as:
 ```swift
-let result = parser("def name")
+public typealias Parser = (Substring) -> ParserResult
 ```
-Note that the parameter type is actually `Substring` and not `String`. This allows for
+Therefore we need to invoke the parser with a substring (the text to be parsed) and we get a `ParserResult`.
+
+```swift
+let result = parser("def functionName")
+```
+
+The above will successfully parse the text as it begins with `"def"`.
+
+Note that the `Parser` parameter type is actually `Substring` and not `String`. This allows for
 efficient processing throughout the parsers as substrings don't copy the string instead
 represent index locations within the string. Swift automatically converts the string literal
 into a `Subtring` however if we have an already defined string we will need to convert
