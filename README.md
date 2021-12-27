@@ -29,7 +29,7 @@ The above will successfully parse the text as it begins with `"def"`.
 Note that the `Parser` parameter type is actually `Substring` and not `String`. This allows for
 efficient processing throughout the parsers as substrings don't copy the string instead
 represent index locations within the string. Swift automatically converts the string literal
-into a `Subtring` however if we have an already defined string we will need to convert
+into a `Substring` however if we have an already defined string we will need to convert
 it to a substring first:
 ```swift
 let text = "def name"
@@ -73,6 +73,10 @@ func params() -> Parser {
      alphaString()
    ])
 }
+
+let parser = functionHeader()
+
+let result = parser("def myFunction(param1, param2, param3)")
 ```
 ## `tag()`
 `tag()` adds a label to a nested parser result which can be used for processing the AST later.
